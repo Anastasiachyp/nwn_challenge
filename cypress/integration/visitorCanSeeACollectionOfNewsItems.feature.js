@@ -1,21 +1,18 @@
-describe("A User can,", () => {
-  beforeEach(() => {
-    cy.intercept("GET", "https://newsapi.org/v2/top-headlines**").as(
-      "fetchData"
-    );
+describe("On visit, the vistor", () => {
+  before(() => {
+    cy.intercept(
+      "GET",
+      "https://newsapi.org/v2/top-headlines?country=se**",
+      { fixture: "news_index.json" }
+    ).as('newsIndex');
     cy.visit("/");
   });
 
-  it("see the news list correctly", () => {
-    cy.get("[data-cy='news-1']").within(() => {
-      cy.contains(
-        "DBS Bank to launch cryptocurrency exchange after condemning Bitcoin a Ponzi scheme in 2017"
-      );
-    });
-    it("is expected to return an array of data", () => {
-      cy.get("@fetchData")
-        .its("response.data.articles")
-        .should("be.an", "array");
-    });
+  it('is expected to make a network call to NewsAPI', () => {
+    cy.wait('@newsIndex').its('request.method').should('eq', 'GET');
+  });
+
+  it("is expected to see a collection of news", () => {
+    cy.get('[data-cy="news-items"]').should("have.length", 3);
   });
 });
