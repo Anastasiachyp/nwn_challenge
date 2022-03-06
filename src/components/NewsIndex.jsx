@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import NewsCard from './NewsCard'
-
+import React, { useEffect, useState } from 'react';
+import NewsService from '../modules/NewsService';
+import NewsCard from './NewsCard';
 
 const NewsIndex = () => {
-  const dispatch = useDispatch();
-  const articles = useSelector((state) => state.newsFeed);
+  const fetchNews = async () => {
+    const news = await NewsService.index()
+    // debugger
+  }
+
+  useEffect(() => {
+    fetchNews()
+  }, [])
   return (
     <>
       <NewsCard />
